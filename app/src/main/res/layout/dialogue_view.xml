@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/round_border"
+    android:layout_width="match_parent"
+    android:layout_margin="20sp"
+    android:layout_height="wrap_content">
+    <EditText
+        android:id="@+id/etNoteTitle"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your note title here"/>
+    <EditText
+        android:id="@+id/etNote"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your note here"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:orientation="horizontal">
+        <RadioGroup
+            android:id="@+id/colorsRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true">
+            <RadioButton
+                android:id="@+id/rbRed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Red" />
+            <RadioButton
+                android:id="@+id/rbBlue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blue" />
+            <RadioButton
+                android:id="@+id/rbGreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Green" />
+            <RadioButton
+                android:id="@+id/rbYellow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yellow" />
+        </RadioGroup>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Red"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:id="@+id/tvColor"/>
+    <Button
+        android:id="@+id/btAddNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_border"
+       android:layout_margin="20dp"
+        android:text="Add Note"/>
+
+
+</LinearLayout>
