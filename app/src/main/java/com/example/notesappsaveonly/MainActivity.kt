@@ -1,9 +1,8 @@
 package com.example.notesappsaveonly
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.graphics.Color
-import android.opengl.Visibility
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,12 +10,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.GridView
-import android.widget.RadioButton
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.dialogue_view.*
-import kotlinx.android.synthetic.main.dialogue_view.view.*
+import kotlinx.android.synthetic.main.dialogue_view_add.view.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var rvMain: RecyclerView
@@ -29,9 +26,9 @@ class MainActivity : AppCompatActivity() {
         rvMain = findViewById(R.id.rvMain)
         gridView = findViewById(R.id.glMain)
 
-        gridView.adapter = GridViewAdapter(notes, this@MainActivity)
+        gridView.adapter = GridViewAdapter(notes, this@MainActivity,this)
 
-        rvMain.adapter = RecyclerViewAdapter(notes)
+        rvMain.adapter = RecyclerViewAdapter(notes,this,this)
         rvMain.layoutManager = LinearLayoutManager(this)
         readFromDB()
 
@@ -54,57 +51,56 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             R.id.addNote -> {
-                var title = ""
                 var note = ""
                 var colorText = "Red"
                 val builder = AlertDialog.Builder(this)
-                val dialogView = LayoutInflater.from(this).inflate(R.layout.dialogue_view, null)
+                val dialogView = LayoutInflater.from(this).inflate(R.layout.dialogue_view_add, null)
                 builder.setView(dialogView)
+                val alertDialog: AlertDialog = builder.create()
+
                 dialogView.colorsRadioGroup.setOnCheckedChangeListener { group, checkedId ->
                         when (checkedId) {
                             R.id.rbRed -> {
                                 colorText = "Red"
+                                dialogView.alertLayout.setBackgroundResource(R.drawable.round_layout_red)
                             }
                             R.id.rbBlue -> {
                                 colorText = "Blue"
+                                dialogView.alertLayout.setBackgroundResource(R.drawable.round_layout_blue)
                             }
                             R.id.rbGreen -> {
                                 colorText = "Green"
+                                dialogView.alertLayout.setBackgroundResource(R.drawable.round_layout_green)
                             }
                             R.id.rbYellow -> {
                                 colorText = "Yellow"
+                                dialogView.alertLayout.setBackgroundResource(R.drawable.round_layout_yellow)
                             }
 
                         }
-                        dialogView.tvColor.setText(colorText)
+
                     }
                 dialogView.btAddNote.setOnClickListener {
-                    title=dialogView.etNoteTitle.text.toString()
+
                     note=dialogView.etNote.text.toString()
-                    if (title.isNotEmpty() && note.isNotEmpty()) {
-                        saveToDB(Note(title, note, colorText))
+                    if ( note.isNotEmpty()) {
+                        saveToDB(Note( note, colorText))
                         readFromDB()
-                        dialogView.etNoteTitle.setText("")
+                        alertDialog.dismiss()
                         dialogView.etNote.setText("")
                         dialogView.rbRed.isChecked = true
                         dialogView.rbBlue.isChecked = false
                         dialogView.rbGreen.isChecked = false
                         dialogView.rbYellow.isChecked = false
 
-                    }else{
-                        dialogView.tvColor.setText("Fill all info!")
-                        dialogView.tvColor.setTextColor(Color.RED)
-
                     }
                 }
-                builder.setPositiveButton("Close") { dialog, which -> dialog.dismiss() }
 
-                val alertDialog: AlertDialog = builder.create()
+                alertDialog.getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+
                 // Set other dialog properties
                 alertDialog.setCancelable(true)
                 alertDialog.show()
-
-
                 return true
             }
 
@@ -114,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 
     fun saveToDB(noteObj: Note) {
         var status = dbHelper.saveData(noteObj)
-        Toast.makeText(this, "Data saved successfully $status", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Data saved successfully at [$status]", Toast.LENGTH_SHORT).show()
 
     }
 

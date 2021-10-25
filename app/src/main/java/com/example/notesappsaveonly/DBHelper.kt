@@ -12,11 +12,11 @@ import android.util.Log
 //details.dp is the database name
 class DBHelper(
     context: Context
-) : SQLiteOpenHelper(context, "note.dp", null, 1) {
-    var sqlightDB: SQLiteDatabase = writableDatabase
+) : SQLiteOpenHelper(context, "note.dp", null, 2) {
+    var sqLightDatabase: SQLiteDatabase = writableDatabase
     override fun onCreate(dp: SQLiteDatabase?) {
         if (dp != null) {
-            dp.execSQL("create table note (Title text ,Note text,Color text)")
+            dp.execSQL("create table note (Note text,Color text)")
         }
 
     }
@@ -30,11 +30,10 @@ class DBHelper(
 
     fun saveData(noteObj: Note): Long {
         val cv = ContentValues()
-        cv.put("Title", noteObj.title)
         cv.put("Note", noteObj.note)
         cv.put("Color", noteObj.color)
 
-        var status = sqlightDB.insert("note", null, cv)//status
+        var status = sqLightDatabase.insert("note", null, cv)//status
         return status
 
     }
@@ -45,26 +44,37 @@ class DBHelper(
         var cursor: Cursor? = null
         try {
 
-            cursor = sqlightDB.rawQuery(selectQuery, null)
+            cursor = sqLightDatabase.rawQuery(selectQuery, null)
         } catch (e: SQLiteException) {
-            sqlightDB.execSQL(selectQuery)
+            sqLightDatabase.execSQL(selectQuery)
         }
         var notes=ArrayList<Note>()
-        var title: String
         var note: String
         var color: String
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount()>0) {
             if (cursor.moveToFirst()) {
                 do {
-                    title = cursor.getString(cursor.getColumnIndex("Title"))
+
                     note = cursor.getString(cursor.getColumnIndex("Note"))
                     color = cursor.getString(cursor.getColumnIndex("Color"))
-                    notes.add(Note(title,note,color))
+                    notes.add(Note(note,color))
 
-                    Log.d("DATA:","$title $note $color")
+                    Log.d("DATA:"," $note $color")
                 } while (cursor.moveToNext())
             }
         }
         return notes
+    }
+    fun updateNote(noteOBJ:Note,oldNote: String): Int {
+        val cv = ContentValues()
+        cv.put("Note", noteOBJ.note)
+        cv.put("Color", noteOBJ.color)
+
+        var rowNum = sqLightDatabase.update("note", cv,"Note = ?", arrayOf(oldNote))
+        return rowNum
+
+    }
+    fun deleteNote(note: String){
+        sqLightDatabase.delete("note","Note=?", arrayOf(note))
     }
 }

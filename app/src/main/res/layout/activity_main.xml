@@ -16,7 +16,7 @@
        android:id="@+id/glMain"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
-       android:numColumns="3"
+       android:numColumns="2"
        android:layout_margin="20dp"
        tools:listitem="@layout/item_row"/>
 
