@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
                     note=dialogView.etNote.text.toString()
                     if ( note.isNotEmpty()) {
-                        saveToDB(Note( note, colorText))
+                        saveToDB(Note( 0,note, colorText))
                         readFromDB()
                         alertDialog.dismiss()
                         dialogView.etNote.setText("")

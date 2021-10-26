@@ -47,6 +47,7 @@ class RecyclerViewAdapter(private val notes: ArrayList<Note>, context: Context,v
                 "Yellow" -> linearLayout.setBackgroundResource(R.drawable.round_layout_yellow)
             }
             ivOptions.setOnClickListener {
+                Toast.makeText(context,"data.id=${data.id}",Toast.LENGTH_SHORT).show()
                 val dbHelper = DBHelper(context)
                 var colorText=data.color
                 val builder = AlertDialog.Builder(context)
@@ -63,7 +64,7 @@ class RecyclerViewAdapter(private val notes: ArrayList<Note>, context: Context,v
                 dialogView.btUpdateNote.setOnClickListener {
                     val updatedNote = dialogView.etYourNote.text.toString()
                     if (updatedNote.isNotEmpty()) {
-                      val rowNum=  dbHelper.updateNote(Note(updatedNote, colorText),data.note)
+                      val rowNum=  dbHelper.updateNote(Note(data.id,updatedNote, colorText))
                         Toast.makeText(context,"Updated successfully. $rowNum row(s) updated",Toast.LENGTH_SHORT).show()
                         alertDialog.dismiss()
                         mainActivity.readFromDB()
@@ -80,7 +81,7 @@ class RecyclerViewAdapter(private val notes: ArrayList<Note>, context: Context,v
                     deleteBuilder.setIcon(android.R.drawable.ic_dialog_alert)
 
                     deleteBuilder.setPositiveButton("Delete"){dialogInterface, which ->
-                        dbHelper.deleteNote(data.note)
+                        dbHelper.deleteNote(Note(data.id,data.note,data.color))
                         alertDialog.dismiss()
                         mainActivity.readFromDB()
                         dialogInterface.dismiss()
@@ -137,7 +138,6 @@ class RecyclerViewAdapter(private val notes: ArrayList<Note>, context: Context,v
         }
 
     }
-
     private fun changeBackGroundColor(checkedId: Int, dialogView: View): String {
         var colorText = "Red"
         when (checkedId) {

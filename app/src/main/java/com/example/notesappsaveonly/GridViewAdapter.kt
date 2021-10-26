@@ -41,7 +41,7 @@ class GridViewAdapter(val notes: ArrayList<Note>,
     }
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var convertView = convertView
-
+        val id = notes[position].id
         val note = notes[position].note
         val color=notes[position].color
 
@@ -84,7 +84,7 @@ class GridViewAdapter(val notes: ArrayList<Note>,
                 dialogView.btUpdateNote.setOnClickListener {
                     val updatedNote = dialogView.etYourNote.text.toString()
                     if (updatedNote.isNotEmpty()) {
-                        val rowNum=  dbHelper.updateNote(Note(updatedNote, colorText),note)
+                        val rowNum=  dbHelper.updateNote(Note(id,updatedNote, colorText))
                         Toast.makeText(context,"Updated successfully. $rowNum row(s) updated",
                             Toast.LENGTH_SHORT).show()
                         alertDialog.dismiss()
@@ -102,7 +102,7 @@ class GridViewAdapter(val notes: ArrayList<Note>,
                     deleteBuilder.setIcon(android.R.drawable.ic_dialog_alert)
 
                     deleteBuilder.setPositiveButton("Delete"){dialogInterface, which ->
-                        dbHelper.deleteNote(note)
+                        dbHelper.deleteNote(Note(id,note,color))
                         alertDialog.dismiss()
                         mainActivity.readFromDB()
                         dialogInterface.dismiss()

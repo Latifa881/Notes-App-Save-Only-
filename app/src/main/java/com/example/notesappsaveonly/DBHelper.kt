@@ -12,11 +12,11 @@ import android.util.Log
 //details.dp is the database name
 class DBHelper(
     context: Context
-) : SQLiteOpenHelper(context, "note.dp", null, 2) {
+) : SQLiteOpenHelper(context, "note.dp", null, 3) {
     var sqLightDatabase: SQLiteDatabase = writableDatabase
     override fun onCreate(dp: SQLiteDatabase?) {
         if (dp != null) {
-            dp.execSQL("create table note (Note text,Color text)")
+            dp.execSQL("create table note ( Id INTEGER PRIMARY KEY,Note text,Color text)")
         }
 
     }
@@ -49,15 +49,16 @@ class DBHelper(
             sqLightDatabase.execSQL(selectQuery)
         }
         var notes=ArrayList<Note>()
+        var id:Int
         var note: String
         var color: String
         if (cursor != null && cursor.getCount()>0) {
             if (cursor.moveToFirst()) {
                 do {
-
+                    id=cursor.getInt(cursor.getColumnIndex("Id"))
                     note = cursor.getString(cursor.getColumnIndex("Note"))
                     color = cursor.getString(cursor.getColumnIndex("Color"))
-                    notes.add(Note(note,color))
+                    notes.add(Note(id,note,color))
 
                     Log.d("DATA:"," $note $color")
                 } while (cursor.moveToNext())
@@ -65,16 +66,16 @@ class DBHelper(
         }
         return notes
     }
-    fun updateNote(noteOBJ:Note,oldNote: String): Int {
+    fun updateNote(noteOBJ:Note): Int {
         val cv = ContentValues()
         cv.put("Note", noteOBJ.note)
         cv.put("Color", noteOBJ.color)
 
-        var rowNum = sqLightDatabase.update("note", cv,"Note = ?", arrayOf(oldNote))
+        var rowNum = sqLightDatabase.update("note", cv,"Id = ${noteOBJ.id}",null)
         return rowNum
 
     }
-    fun deleteNote(note: String){
-        sqLightDatabase.delete("note","Note=?", arrayOf(note))
+    fun deleteNote(noteOBJ:Note){
+        sqLightDatabase.delete("note","Id = ${noteOBJ.id}",null)
     }
 }
