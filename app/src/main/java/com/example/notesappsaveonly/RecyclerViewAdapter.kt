@@ -47,7 +47,7 @@ class RecyclerViewAdapter(private val notes: ArrayList<Note>, context: Context,v
                 "Yellow" -> linearLayout.setBackgroundResource(R.drawable.round_layout_yellow)
             }
             ivOptions.setOnClickListener {
-                Toast.makeText(context,"data.id=${data.id}",Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context,"data.id=${data.id}",Toast.LENGTH_SHORT).show()
                 val dbHelper = DBHelper(context)
                 var colorText=data.color
                 val builder = AlertDialog.Builder(context)
